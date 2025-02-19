@@ -1,0 +1,34 @@
+---
+# tasks file for ntp_server
+- name: Установка Chrony
+  dnf:
+    name: chrony
+    state: present
+
+- name: Копирование настроек Chrony
+  template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Chrony
+
+- name: Включение и запуск Chrony
+  systemd:
+    name: chronyd
+    enabled: yes
+    state: started
+
+- name: Разрешение NTP в firewalld
+  firewalld:
+    service: ntp
+    permanent: true
+    state: enabled
+
+- name: Перезапуск firewalld
+  systemd:
+    name: firewalld
+    state: restarted
+    enabled: yes
+

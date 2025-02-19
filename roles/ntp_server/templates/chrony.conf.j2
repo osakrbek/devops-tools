@@ -1,0 +1,29 @@
+# Основные серверы времени
+{% for server in ntp_servers %}
+server {{ server }} iburst
+{% endfor %}
+
+# Разрешение синхронизации для сети
+allow {{ ntp_allow_network }}
+
+# Локальный сервер как резервный источник
+local stratum 10
+
+# Drift-файл
+driftfile /var/lib/chrony/drift
+
+# Логирование
+logdir /var/log/chrony
+
+# Настройки безопасности
+
+# Ограничения по умолчанию (для всех подключений)
+restrict default kod notrap nomodify nopeer noquery
+
+# Ограничение для определенной сети
+restrict {{ ntp_restrict_network }} mask {{ ntp_restrict_mask }} nomodify notrap
+
+# Разрешение серверу обмениваться данными с самим собой
+restrict 127.0.0.1
+restrict ::1
+

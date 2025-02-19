@@ -1,0 +1,4 @@
+---
+# vars file for ntp_server
+ntp_service: chronyd
+

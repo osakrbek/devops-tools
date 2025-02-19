@@ -1,0 +1,7 @@
+---
+- name: Установка NTP через роль
+  hosts: ntp_servers
+  become: true
+  roles:
+    - ntp_server
+
