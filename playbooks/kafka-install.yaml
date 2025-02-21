@@ -1,0 +1,13 @@
+- hosts: kafka
+  vars:
+    - kafka_java_heap: "-Xms4G -Xmx4G"
+    - kafka_version: 3.5.2
+    - zookeeper_version: 3.9.2
+      #    - zookeeper_servers: ip
+  roles:
+    - sleighzy.zookeeper
+    - sleighzy.kafka
+  pre_tasks:
+    - name: install jre
+      apt:
+        name: default-jdk

@@ -1,0 +1,14 @@
+---
+- hosts: gateway
+  become: yes
+  tasks:
+  - name: Apply Page Template
+    copy:
+        src: ../files/haproxy-tumar-prod.cfg
+        dest: /etc/haproxy/haproxy.cfg
+        owner: haproxy
+        group: haproxy
+        validate: haproxy -f %s -c -q
+  - service:
+        name: "haproxy"
+        state: restarted

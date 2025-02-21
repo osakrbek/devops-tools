@@ -1,0 +1,34 @@
+- name: Run using a project directory
+  hosts: nexus
+  gather_facts: false
+  become: true
+  tasks:
+    - name: copy Docker Compose files
+      copy:
+        src: ../files/{{ item }}
+        dest: /opt/{{ item }}
+      loop:
+      - nexus-docker-compose.yml
+
+    - name: deploy Docker Compose stack
+      community.docker.docker_compose_v2:
+        project_src: /opt/
+        files:
+        - nexus-docker-compose.yml
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
+
+    - name: Run a simple command (command)
+      community.docker.docker_container_exec:
+        container: opt-nexus-1
+        command: /bin/bash -c "cat admin.password"
+        chdir: /nexus-data
+      register: result
+
+    - name: Print stdout
+      ansible.builtin.debug:
+        var: result.stdout
+

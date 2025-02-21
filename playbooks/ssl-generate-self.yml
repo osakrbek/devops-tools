@@ -1,0 +1,13 @@
+- hosts: lb
+  become: true
+  vars: 
+    ssl_certificate_selfsigned_subject: |-
+       /C=KZ/ST=Astana/L=Astana/O=NIT/CN=example.kz
+  roles:
+    - role: ome.ssl_certificate
+  handlers:
+    - name: restart nginx
+      listen: ssl certificate changed
+      service:
+        name: nginx
+        state: restarted

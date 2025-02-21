@@ -1,0 +1,8 @@
+- hosts: lb
+  become: true
+  vars:
+    nginx_remove_default_vhost: true
+  vars_files:
+    - ../vars/nginx.yml
+  roles:
+    - { role: geerlingguy.nginx }

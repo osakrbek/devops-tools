@@ -1,0 +1,6 @@
+- hosts: nexus
+  become: true
+  vars_files:
+    - ../vars/daemon.yml
+  roles:
+    - geerlingguy.docker

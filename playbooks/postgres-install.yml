@@ -1,0 +1,41 @@
+- hosts: db
+  vars:
+    become: true
+    postgresql_flavor: pgdg
+    postgresql_version: 15
+    postgresql_conf:
+      - listen_addresses: "'*'"    # disable network listening (listen on unix socket only)
+      - max_connections: 100       # decrease connection limit
+      - shared_buffers: 1GB
+      - effective_cache_size: 3GB
+      - maintenance_work_mem: 256MB
+      - checkpoint_completion_target: 0.9
+      - wal_buffers: 16MB
+      - default_statistics_target: 100
+      - random_page_cost: 1.1
+      - effective_io_concurrency: 200
+      - work_mem: 3495kB
+      - huge_pages: off
+      - min_wal_size: 256MB
+      - max_wal_size: 1GB
+      - max_worker_processes: 4
+      - max_parallel_workers_per_gather: 2
+      - max_parallel_workers: 4
+    postgresql_pg_hba_conf:
+      - host all all 10.0.0.0/8 scram-sha-256
+  roles:
+    - galaxyproject.postgresql
+  pre_tasks:
+  - import_tasks: ../playbooks/link.yml
+  tasks:
+  - import_tasks: ../playbooks/postgres-create-user.yml
+    vars:
+      postgresql_users:
+        - name: new_user
+          password: TUser2024!
+  - import_tasks: ../playbooks/postgres-create-db.yml
+    vars:
+      postgresql_databases:
+      - name: new_db
+        owner: 'new_user'
+        state: present

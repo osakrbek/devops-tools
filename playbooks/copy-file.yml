@@ -1,0 +1,19 @@
+---
+- name: copy files
+  hosts: worker
+  become: true
+  tasks:
+    - name: copy containerd config 
+      copy: 
+        src: ../files/container-new.conf
+        dest: /etc/containerd/config.toml
+        owner: root
+        group: root
+        mode: '0640'
+        backup: yes 
+      notify: restart containerd
+  handlers:
+    - name: restart containerd
+      service:
+        name: containerd
+        state: restarted

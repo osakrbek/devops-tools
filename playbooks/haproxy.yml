@@ -1,0 +1,7 @@
+- name: install haproxy
+  hosts: gateway
+  become: yes
+  vars_files:
+    - ../vars/haproxy.yml
+  roles:
+    - { role: geerlingguy.haproxy }
